@@ -1,24 +1,15 @@
 import { useEffect, useState } from 'react';
 
-import Food from '../../components/Food';
+import Food, { FoodInterface } from '../../components/Food';
 import Header from '../../components/Header';
 import ModalAddFood from '../../components/ModalAddFood';
 import ModalEditFood from '../../components/ModalEditFood';
 import api from '../../services/api';
 import { FoodsContainer } from './styles';
 
-export interface FoodProps {
-  id?: number,
-  name?: string,
-  description?: string,
-  price?: string,
-  available?: boolean,
-  image?: string,
-}
-
 interface StateProps {
-  foods: FoodProps[],
-  editingFood: FoodProps,
+  foods: FoodInterface[],
+  editingFood: FoodInterface,
   modalOpen: boolean,
   editModalOpen: boolean,
 }
@@ -27,7 +18,7 @@ export default function Dashboard(): JSX.Element {
 
   const [ state, setState ] = useState<StateProps>({
     foods: [],
-    editingFood: {},
+    editingFood: {} as FoodInterface,
     modalOpen: false,
     editModalOpen: false,
   })
@@ -40,11 +31,11 @@ export default function Dashboard(): JSX.Element {
     fetchProducts()
   }, [])
 
-   const handleAddFood = async (food: FoodProps) => {
+   const handleAddFood = async (food: FoodInterface) => {
     const { foods } = state;
 
     try {
-      const response = await api.post<FoodProps>('/foods', {
+      const response = await api.post<FoodInterface>('/foods', {
         ...food,
         available: true,
       });
@@ -55,16 +46,16 @@ export default function Dashboard(): JSX.Element {
     }
   }
 
-  const handleUpdateFood = async (food: FoodProps) => {
+  const handleUpdateFood = async (food: FoodInterface) => {
     const { foods, editingFood } = state;
 
     try {
-      const foodUpdated = await api.put<FoodProps>(
+      const foodUpdated = await api.put<FoodInterface>(
         `/foods/${editingFood.id}`,
         { ...editingFood, ...food },
       );
 
-      const foodsUpdated = foods.map((f: FoodProps) =>
+      const foodsUpdated = foods.map((f: FoodInterface) =>
         f.id !== foodUpdated.data.id ? f : foodUpdated.data,
       );
 
@@ -74,12 +65,12 @@ export default function Dashboard(): JSX.Element {
     }
   }
 
-  const handleDeleteFood = async (id: number) => {
+  const handleDeleteFood = async (id: string) => {
     const { foods } = state;
 
     await api.delete(`/foods/${id}`);
 
-    const foodsFiltered = foods.filter((food: FoodProps) => food.id !== id);
+    const foodsFiltered = foods.filter((food: FoodInterface) => food.id !== id);
 
     setState(prevState => ({ ...prevState, foods: foodsFiltered }));
   }
@@ -96,7 +87,7 @@ export default function Dashboard(): JSX.Element {
     setState(prevState => ({ ...prevState, editModalOpen: !editModalOpen }));
   }
 
-  const handleEditFood = (food: FoodProps) => {
+  const handleEditFood = (food: FoodInterface) => {
     setState(prevState => ({ ...prevState, editingFood: food, editModalOpen: true }));
   }
 
