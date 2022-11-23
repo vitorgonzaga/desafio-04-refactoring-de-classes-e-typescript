@@ -9,9 +9,9 @@ import { useField } from '@unform/core';
 import { IconBase } from 'react-icons';
 import { Container } from './styles';
 
-interface InputProps {
+export interface InputProps {
   name: string,
-  icon: JSX.Element,
+  icon?: JSX.Element,
   [key: string]: any,
 }
 
