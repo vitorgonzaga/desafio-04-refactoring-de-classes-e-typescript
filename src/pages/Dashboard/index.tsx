@@ -7,7 +7,7 @@ import ModalEditFood from '../../components/ModalEditFood';
 import api from '../../services/api';
 import { FoodsContainer } from './styles';
 
-interface FoodProps {
+export interface FoodProps {
   id?: number,
   name?: string,
   description?: string,
